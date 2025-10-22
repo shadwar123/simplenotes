@@ -13,11 +13,17 @@ export interface JWTPayload {
 }
 
 export function generateToken(payload: JWTPayload): string {
+  if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined');
+  }
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 }
 
 export function verifyToken(token: string): JWTPayload | null {
   try {
+    if (!JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined');
+    }
     return jwt.verify(token, JWT_SECRET) as JWTPayload;
   } catch (error) {
     return null;
